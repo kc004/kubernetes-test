@@ -18,9 +18,6 @@ cp terraform /usr/local/bin/
 sudo apt-get install python -y
 sudo apt-get install apt-transport-https ca-certificates curl software-properties-common -y
 sudo apt-get install python-pip -y
-sudo apt-add-repository ppa:ansible/ansible -y
-sudo apt-get update
-sudo apt-get install ansible -y
 
 git clone https://github.com/kc004/kubernetes-test.git
 sudo pip install -r requirements.txt
