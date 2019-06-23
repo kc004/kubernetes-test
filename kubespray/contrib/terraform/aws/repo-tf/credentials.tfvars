@@ -1,0 +1,8 @@
+#AWS Access Key
+AWS_ACCESS_KEY_ID = "AKIA3B7OACEOROECKO6G"
+#AWS Secret Key
+AWS_SECRET_ACCESS_KEY = "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"
+#EC2 SSH Key Name
+AWS_SSH_KEY_NAME = "keyur-singapore"
+#AWS Region
+AWS_DEFAULT_REGION = "ap-southeast-1"
