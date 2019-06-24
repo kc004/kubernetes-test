@@ -145,6 +145,10 @@ helm install install/kubernetes/helm/istio-init --name istio-init --namespace is
 helm template install/kubernetes/helm/istio --name istio --namespace istio-system \
     --values install/kubernetes/helm/istio/values-istio-demo.yaml | kubectl apply -f -
 ```
+### Monitoring (Prometheus, Alert-manager and Grafana)
+```
+helm install --name prometheus --namespace prometheus stable/prometheus-operator
+```
 
 ### Horitzontal Pod Autoscaler (HPA)
 ```
