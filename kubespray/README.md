@@ -50,6 +50,10 @@ ELB DNS name you will find it in the AWS console or in the kubespray/inventory/m
 
 
 Wait for around 30 min to ready your infrastructure.
+
+For Destroy:
+terraform destroy -var-file=cred.tfvar
+
 ```
 
 
