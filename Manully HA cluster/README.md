@@ -146,7 +146,17 @@ helm template install/kubernetes/helm/istio --name istio --namespace istio-syste
     --values install/kubernetes/helm/istio/values-istio-demo.yaml | kubectl apply -f -
 ```
 
+### Horitzontal Pod Autoscaler (HPA)
+```
+ref: kubectl apply -f https://raw.githubusercontent.com/kc004/kubernetes-test/master/Manully%20HA%20cluster/HPA.yaml
+```
+
 ### Backup Script:
 ```
 kubectl apply -f https://raw.githubusercontent.com/kc004/kubernetes-test/master/Manully%20HA%20cluster/backup-script.sh
+```
+
+### Tear down kubernetes cluster:
+```
+kubectl apply -f https://raw.githubusercontent.com/kc004/kubernetes-test/master/Manully%20HA%20cluster/tear-down.sh
 ```
