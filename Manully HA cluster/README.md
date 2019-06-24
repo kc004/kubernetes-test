@@ -1,4 +1,4 @@
-## create a HA kubernetes cluster
+## Create a HA kubernetes cluster
 
 ### HAProxy
 ```
@@ -88,6 +88,12 @@ helm init --service-account tiller
 ```
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/mandatory.yaml
 ```
+### Heapster for metrics:
+```
+https://raw.githubusercontent.com/kc004/kubernetes-test/master/Heapster/heapster-deployment.yaml
+https://raw.githubusercontent.com/kc004/kubernetes-test/master/Heapster/heapster-rbac.yaml
+https://raw.githubusercontent.com/kc004/kubernetes-test/master/Heapster/influxdb.yaml
+```
 
 ### Kubernetes Dashboard:
 ```
@@ -139,4 +145,8 @@ helm install install/kubernetes/helm/istio-init --name istio-init --namespace is
 helm template install/kubernetes/helm/istio --name istio --namespace istio-system \
     --values install/kubernetes/helm/istio/values-istio-demo.yaml | kubectl apply -f -
 ```
-	
+
+### Backup Script:
+```
+kubectl apply -f https://raw.githubusercontent.com/kc004/kubernetes-test/master/Manully%20HA%20cluster/backup-script.sh
+```
