@@ -118,7 +118,7 @@ helm install --name jenkins stable/jenkins --namespace jenkins --set master.serv
 password:  printf $(kubectl get secret --namespace jenkins jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
 ```
 
-### Private Docker Registry
+### Private Docker Registry:
 ```
 mkdir auth
 docker run --entrypoint htpasswd registry:2 -Bbn username password > auth/htpasswd
@@ -145,12 +145,17 @@ helm install install/kubernetes/helm/istio-init --name istio-init --namespace is
 helm template install/kubernetes/helm/istio --name istio --namespace istio-system \
     --values install/kubernetes/helm/istio/values-istio-demo.yaml | kubectl apply -f -
 ```
-### Monitoring (Prometheus, Alert-manager and Grafana)
+### Monitoring (Prometheus, Alert-manager and Grafana):
 ```
 helm install --name prometheus --namespace prometheus stable/prometheus-operator
 ```
 
-### Horitzontal Pod Autoscaler (HPA)
+### Elasticsearch, Logstash and Kibana (ELK):
+```
+helm install --name elk --namespace elk stable/elastic-stack
+```
+
+### Horitzontal Pod Autoscaler (HPA):
 ```
 ref: kubectl apply -f https://raw.githubusercontent.com/kc004/kubernetes-test/master/Manully%20HA%20cluster/HPA.yaml
 ```
