@@ -1,0 +1,61 @@
+def user = 'admin'
+def pass = 'Registry@admin'
+def registry = 'myregistrydomain.com:5000'
+def DOCKER_IMAGE_NAME = 'hellowhaletest'
+def namespace = 'dev'
+def K8S_DEPLOYMENT_NAME = 'dev-test'
+pipeline {
+  agent any
+    stages {
+        stage ('Initialize') {
+            steps {
+                sh '''
+                    echo "PATH = ${PATH}"
+                ''' 
+            }
+        }
+    stage ('Check-Git-Secrets') {
+      steps {
+        sh 'rm trufflehog || true'
+		sh 'git clone https://github.com/janakiramm/hellowhale.git'
+		sh 'cd hellowhale && mv html src'
+        sh 'docker run gesellix/trufflehog --json https://github.com/janakiramm/hellowhale.git > trufflehog'
+        sh 'cat trufflehog'
+      }
+    }
+    
+    /*stage ('Source Composition Analysis') {
+      steps {
+         sh 'rm owasp* || true'
+         sh 'cd $(pwd)/hellowhale/ && wget "https://raw.githubusercontent.com/cehkunal/webapp/master/owasp-dependency-check.sh" && chmod +x owasp-dependency-check.sh && bash owasp-dependency-check.sh'
+         sh 'ls'
+         sh 'cat $HOME/OWASP-Dependency-Check/reports/dependency-check-report.xml'
+        
+      }
+    }
+    */
+    stage ('Build') {
+      steps {
+      sh "docker build https://github.com/janakiramm/hellowhale.git -t hellowhale"
+      sh "docker tag hellowhale ${registry}/${DOCKER_IMAGE_NAME}"
+      sh "docker login ${registry} -u ${user} -p ${pass}"
+      sh "docker push ${registry}/${DOCKER_IMAGE_NAME}:latest"
+       }
+    }
+    
+    stage('Deploy') {
+      steps {
+		sh "curl -LO 'https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl' && chmod +x ./kubectl && mv ./kubectl /usr/local/bin/kubectl"
+        sh "kubectl get ns ${namespace} || kubectl create ns ${namespace}"
+        sh "kubectl run ${K8S_DEPLOYMENT_NAME} --image=${registry}/${DOCKER_IMAGE_NAME}:latest -n ${namespace} || kubectl set image deployment/${K8S_DEPLOYMENT_NAME} ${K8S_DEPLOYMENT_NAME}=${registry}/${DOCKER_IMAGE_NAME}:latest -n ${namespace}"
+      }
+    }
+    
+    
+    stage ('DAST') {
+      steps {
+        sh 'docker run -v \$(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-baseline.py -t http://domain.com -r scan_report.html || true'
+      }
+    }
+  }
+}
