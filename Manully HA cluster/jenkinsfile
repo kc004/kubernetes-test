@@ -17,8 +17,8 @@ pipeline {
     stage ('Check-Git-Secrets') {
       steps {
         sh 'rm trufflehog || true'
-		sh 'git clone https://github.com/janakiramm/hellowhale.git'
-		sh 'cd hellowhale && mv html src'
+	sh 'git clone https://github.com/janakiramm/hellowhale.git'
+	sh 'cd hellowhale && mv html src'
         sh 'docker run gesellix/trufflehog --json https://github.com/janakiramm/hellowhale.git > trufflehog'
         sh 'cat trufflehog'
       }
@@ -28,9 +28,7 @@ pipeline {
       steps {
          sh 'rm owasp* || true'
          sh 'cd $(pwd)/hellowhale/ && wget "https://raw.githubusercontent.com/cehkunal/webapp/master/owasp-dependency-check.sh" && chmod +x owasp-dependency-check.sh && bash owasp-dependency-check.sh'
-         sh 'ls'
-         sh 'cat $HOME/OWASP-Dependency-Check/reports/dependency-check-report.xml'
-        
+         sh 'cat $HOME/OWASP-Dependency-Check/reports/dependency-check-report.xml'        
       }
     }
     */
@@ -45,12 +43,11 @@ pipeline {
     
     stage('Deploy') {
       steps {
-		sh "curl -LO 'https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl' && chmod +x ./kubectl && mv ./kubectl /usr/local/bin/kubectl"
+        sh "curl -LO 'https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl' && chmod +x ./kubectl && mv ./kubectl /usr/local/bin/kubectl"
         sh "kubectl get ns ${namespace} || kubectl create ns ${namespace}"
         sh "kubectl run ${K8S_DEPLOYMENT_NAME} --image=${registry}/${DOCKER_IMAGE_NAME}:latest -n ${namespace} || kubectl set image deployment/${K8S_DEPLOYMENT_NAME} ${K8S_DEPLOYMENT_NAME}=${registry}/${DOCKER_IMAGE_NAME}:latest -n ${namespace}"
       }
     }
-    
     
     stage ('DAST') {
       steps {
